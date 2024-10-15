@@ -1,7 +1,9 @@
 # RNG-Aviator-Game
 This is a simple code exploring a random number generator using the aviator look alike game
-##Overview
+
+#Overview
 This project was created to explore and better understand how random number generators (RNGs) work. The Aviator game simulates a scenario where a random "crash point" is generated during gameplay, and the player's goal is to see how far the plane flies before it crashes. The crash point is generated randomly, mimicking the unpredictability of real-world RNGs used in games and other applications.
+
 
 Purpose
 The main purpose of this project was to gain hands-on experience with random number generation, particularly within the context of a game. By creating a simple UI and incorporating RNG, I wanted to deepen my understanding of how random values are used in simulations, gaming mechanics, and decision-making algorithms.
