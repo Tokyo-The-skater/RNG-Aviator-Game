@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR Attendance & Workforce Monitoring</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2330;
+    --border: #2a3441;
+    --border2: #30404f;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --text3: #6e7681;
+    --accent: #1f6feb;
+    --accent2: #388bfd;
+    --green: #2ea043;
+    --green-bg: #0d3318;
+    --green-text: #3fb950;
+    --red: #da3633;
+    --red-bg: #3d1717;
+    --red-text: #f85149;
+    --yellow: #9e6a03;
+    --yellow-bg: #272115;
+    --yellow-text: #d29922;
+    --orange: #bd561d;
+    --orange-bg: #2d1b0e;
+    --orange-text: #f0883e;
+    --purple: #6e40c9;
+    --purple-bg: #1e1245;
+    --purple-text: #a371f7;
+    --radius: 8px;
+    --radius2: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text);
+  }
+  .logo-sub { font-size: 10px; color: var(--text2); font-weight: 400; }
+
+  .nav-section {
+    padding: 12px 10px 4px;
+  }
+
+  .nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 0 8px;
+    margin-bottom: 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text2);
+    transition: all 0.15s;
+    border: 1px solid transparent;
+    margin-bottom: 1px;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: #1a2c42; color: var(--accent2); border-color: #1f3f5c; font-weight: 500; }
+
+  .nav-icon { font-size: 15px; width: 18px; text-align: center; }
+
+  .badge {
+    margin-left: auto;
+    background: var(--red);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+  }
+  .badge.yellow { background: var(--yellow); }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 12px 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .user-chip {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1f6feb, #6e40c9);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: white; flex-shrink: 0;
+  }
+  .user-info { flex: 1; min-width: 0; }
+  .user-name { font-size: 12px; font-weight: 600; color: var(--text); }
+  .user-role { font-size: 10px; color: var(--text3); }
+
+  /* MAIN */
+  .main {
+    margin-left: 220px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .topbar-title { font-size: 16px; font-weight: 600; }
+  .topbar-sub { font-size: 12px; color: var(--text2); margin-left: 8px; }
+
+  .topbar-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+  .btn {
+    padding: 7px 14px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    display: flex; align-items: center; gap: 6px;
+    transition: all 0.15s;
+  }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border2); }
+  .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+  .btn-red { background: var(--red-bg); color: var(--red-text); border: 1px solid var(--red); }
+  .btn-green { background: var(--green-bg); color: var(--green-text); border: 1px solid var(--green); }
+
+  .date-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--text2);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* PAGE CONTENT */
+  .page { display: none; padding: 24px; }
+  .page.active { display: block; }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .section-title { font-size: 14px; font-weight: 600; color: var(--text); }
+  .section-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  /* STAT CARDS */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .stat-card.green::before { background: var(--green-text); }
+  .stat-card.red::before { background: var(--red-text); }
+  .stat-card.yellow::before { background: var(--yellow-text); }
+  .stat-card.blue::before { background: var(--accent2); }
+  .stat-card.orange::before { background: var(--orange-text); }
+
+  .stat-label { font-size: 11px; color: var(--text2); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-value { font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+  .stat-card.green .stat-value { color: var(--green-text); }
+  .stat-card.red .stat-value { color: var(--red-text); }
+  .stat-card.yellow .stat-value { color: var(--yellow-text); }
+  .stat-card.blue .stat-value { color: var(--accent2); }
+  .stat-card.orange .stat-value { color: var(--orange-text); }
+  .stat-meta { font-size: 11px; color: var(--text3); }
+
+  /* TWO COL LAYOUT */
+  .two-col { display: grid; grid-template-columns: 1fr 340px; gap: 16px; margin-bottom: 16px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-title { font-size: 13px; font-weight: 600; }
+  .card-body { padding: 16px; }
+
+  /* ATTENDANCE TABLE */
+  .att-table { width: 100%; border-collapse: collapse; }
+  .att-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .att-table td {
+    padding: 10px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .att-table tr:last-child td { border-bottom: none; }
+  .att-table tr:hover td { background: var(--surface2); }
+
+  /* STATUS PILLS */
+  .pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pill::before { content: '●'; font-size: 8px; }
+  .pill.present { background: var(--green-bg); color: var(--green-text); }
+  .pill.absent { background: var(--red-bg); color: var(--red-text); }
+  .pill.late { background: var(--yellow-bg); color: var(--yellow-text); }
+  .pill.leave { background: var(--purple-bg); color: var(--purple-text); }
+  .pill.partial { background: var(--orange-bg); color: var(--orange-text); }
+  .pill.overtime { background: #1e2d4a; color: var(--accent2); }
+  .pill.holiday { background: #1e1f2e; color: #8b949e; }
+  .pill.pending { background: var(--yellow-bg); color: var(--yellow-text); }
+  .pill.approved { background: var(--green-bg); color: var(--green-text); }
+  .pill.rejected { background: var(--red-bg); color: var(--red-text); }
+
+  /* EMPLOYEE ROW */
+  .emp-cell { display: flex; align-items: center; gap: 9px; }
+  .emp-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: white; flex-shrink: 0;
+  }
+  .emp-name { font-size: 13px; font-weight: 500; }
+  .emp-dept { font-size: 11px; color: var(--text2); }
+
+  .mono { font-family: 'DM Mono', monospace; font-size: 12px; }
+
+  /* SHIFT BADGE */
+  .shift-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .shift-normal { background: #1a2c42; color: var(--accent2); }
+  .shift-wh-am { background: #1e2d1a; color: var(--green-text); }
+  .shift-wh-pm { background: #2d1e1a; color: var(--orange-text); }
+
+  /* ALERT PANEL */
+  .alert-item {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .alert-item:last-child { border-bottom: none; }
+  .alert-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .alert-dot.red { background: var(--red-text); }
+  .alert-dot.yellow { background: var(--yellow-text); }
+  .alert-dot.blue { background: var(--accent2); }
+  .alert-msg { font-size: 12px; line-height: 1.5; }
+  .alert-time { font-size: 10px; color: var(--text3); margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+  /* MINI CHART BARS */
+  .mini-bars {
+    display: flex; gap: 3px; align-items: flex-end; height: 40px;
+  }
+  .mini-bar {
+    flex: 1;
+    border-radius: 2px 2px 0 0;
+    background: var(--accent);
+    opacity: 0.7;
+    min-height: 4px;
+    transition: opacity 0.2s;
+  }
+  .mini-bar:hover { opacity: 1; }
+
+  /* SHIFT TIMELINE */
+  .timeline-wrap {
+    position: relative;
+    height: 14px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .timeline-bar {
+    position: absolute;
+    height: 100%;
+    border-radius: 4px;
+  }
+
+  /* OCCUPANCY METER */
+  .occ-meter {
+    display: flex; gap: 2px; flex-wrap: wrap; margin: 8px 0;
+  }
+  .occ-dot {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    background: var(--green-text);
+  }
+  .occ-dot.empty { background: var(--surface2); }
+  .occ-dot.alert { background: var(--red-text); }
+
+  /* FORM FIELDS */
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .form-field { display: flex; flex-direction: column; gap: 5px; }
+  .form-label { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; }
+  .form-input, .form-select {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 13px;
+    color: var(--text);
+    font-family: inherit;
+    outline: none;
+  }
+  .form-input:focus, .form-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(31,111,235,0.15); }
+  .form-select option { background: var(--surface2); }
+
+  /* TAB BAR */
+  .tab-bar {
+    display: flex; gap: 2px;
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 3px;
+    margin-bottom: 16px;
+    width: fit-content;
+  }
+  .tab {
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* FILTER ROW */
+  .filter-row { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .filter-chip {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text2);
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .filter-chip:hover, .filter-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .search-box {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--text);
+    font-family: inherit;
+    outline: none;
+    width: 200px;
+  }
+  .search-box:focus { border-color: var(--accent); }
+
+  /* EMERGENCY PAGE */
+  .emergency-header {
+    background: linear-gradient(135deg, #3d0e10, #1a0608);
+    border: 1px solid var(--red);
+    border-radius: var(--radius2);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .emergency-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--red);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .big-number {
+    font-size: 64px; font-weight: 800; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .big-label { font-size: 14px; color: var(--text2); margin-top: 4px; }
+
+  /* PROGRESS BAR */
+  .progress-wrap { background: var(--surface2); border-radius: 4px; height: 8px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+
+  /* SCROLLABLE */
+  .scroll-y { overflow-y: auto; max-height: 340px; }
+
+  /* TOOLTIP-LIKE TAG */
+  .tag {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--surface2);
+    color: var(--text2);
+    border: 1px solid var(--border);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1200px) {
+    .stat-grid { grid-template-columns: repeat(3, 1fr); }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">HR</div>
+    <div>
+      <div class="logo-text">Workforce Monitor</div>
+      <div class="logo-sub">HikCentral Integration</div>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item active" onclick="showPage('dashboard')">
+      <span class="nav-icon">⊞</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('attendance')">
+      <span class="nav-icon">📋</span> Attendance Log
+      <span class="badge">3</span>
+    </div>
+    <div class="nav-item" onclick="showPage('emergency')">
+      <span class="nav-icon">🚨</span> Emergency View
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Workflows</div>
+    <div class="nav-item" onclick="showPage('leave')">
+      <span class="nav-icon">🗓</span> Leave Requests
+      <span class="badge yellow">5</span>
+    </div>
+    <div class="nav-item" onclick="showPage('flexibility')">
+      <span class="nav-icon">🔄</span> Flexibility Req.
+    </div>
+    <div class="nav-item" onclick="showPage('overtime')">
+      <span class="nav-icon">⏱</span> Overtime
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Admin</div>
+    <div class="nav-item">
+      <span class="nav-icon">👥</span> Employees
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">📤</span> Payroll Export
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">⚙️</span> Settings
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-chip">
+      <div class="avatar">NM</div>
+      <div class="user-info">
+        <div class="user-name">Ntokozo Matsipa</div>
+        <div class="user-role">Solution Analyst</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <span class="topbar-title" id="page-title">Dashboard</span>
+    <span class="topbar-sub" id="page-sub">Today's workforce overview</span>
+    <div class="topbar-actions">
+      <div class="date-chip">Saturday, 07 Mar 2026</div>
+      <button class="btn btn-ghost">↻ Sync HikCentral</button>
+      <button class="btn btn-primary">+ Manual Entry</button>
+    </div>
+  </header>
+
+  <!-- ═══════════ DASHBOARD PAGE ═══════════ -->
+  <div class="page active" id="page-dashboard">
+    <!-- STAT CARDS -->
+    <div class="stat-grid">
+      <div class="stat-card green">
+        <div class="stat-label">Present Today</div>
+        <div class="stat-value">142</div>
+        <div class="stat-meta">↑ 3 from yesterday</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-label">Absent</div>
+        <div class="stat-value">8</div>
+        <div class="stat-meta">3 unexcused</div>
+      </div>
+      <div class="stat-card yellow">
+        <div class="stat-label">Late Arrivals</div>
+        <div class="stat-value">5</div>
+        <div class="stat-meta">Avg 14 min late</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-label">On Leave</div>
+        <div class="stat-value">11</div>
+        <div class="stat-meta">Approved leave</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">Overtime Active</div>
+        <div class="stat-value">7</div>
+        <div class="stat-meta">Warehouse PM shift</div>
+      </div>
+    </div>
+
+    <!-- ATTENDANCE TABLE + ALERTS -->
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Live Attendance Feed</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="pill present" style="font-size:10px;">● LIVE</span>
+            <select class="form-select" style="padding:4px 8px;font-size:11px;">
+              <option>All Shifts</option>
+              <option>Normal Shift</option>
+              <option>Warehouse AM</option>
+              <option>Warehouse PM</option>
+            </select>
+          </div>
+        </div>
+        <div class="scroll-y">
+          <table class="att-table">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Shift</th>
+                <th>Time In</th>
+                <th>Time Out</th>
+                <th>Hours</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#1f6feb,#6e40c9)">TM</div><div><div class="emp-name">Thabo Molefe</div><div class="emp-dept">Warehouse</div></div></div></td>
+                <td><span class="shift-badge shift-wh-am">WH AM</span></td>
+                <td class="mono">06:02</td>
+                <td class="mono">14:10</td>
+                <td class="mono">8.1h</td>
+                <td><span class="pill present">Present</span></td>
+              </tr>
+              <tr>
+                <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#2ea043,#1f6feb)">SR</div><div><div class="emp-name">Sipho Radebe</div><div class="emp-dept">Office</div></div></div></td>
+                <td><span class="shift-badge shift-normal">Normal</span></td>
+                <td class="mono">08:47</td>
+                <td class="mono">—</td>
+                <td class="mono">—</td>
+                <td><span class="pill late">Late</span></td>
+              </tr>
+              <tr>
+                <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#bd561d,#9e6a03)">LN</div><div><div class="emp-name">Lerato Nkosi</div><div class="emp-dept">Finance</div></div></div></td>
+                <td><span class="shift-badge shift-normal">Normal</span></td>
+                <td class="mono">07:55</td>
+                <td class="mono">—</td>
+                <td class="mono">—</td>
+                <td><span class="pill present">Present</span></td>
+              </tr>
+              <tr>
+                <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#da3633,#bd561d)">KD</div><div><div class="emp-name">Kagiso Dlamini</div><div class="emp-dept">Warehouse</div></div></div></td>
+                <td><span class="shift-badge shift-wh-pm">WH PM</span></td>
+                <td class="mono">—</td>
+                <td class="mono">—</td>
+                <td class="mono">—</td>
+                <td><span class="pill absent">Absent</span></td>
+              </tr>
+              <tr>
+                <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#6e40c9,#1f6feb)">NM</div><div><div class="emp-name">Nomsa Mthembu</div><div class="emp-dept">HR</div></div></div></td>
+                <td><span class="shift-badge shift-normal">Normal</span></td>
+                <td class="mono">08:01</td>
+                <td class="mono">—</td>
+                <td class="mono">—</td>
+                <td><span class="pill present">Present</span></td>
+              </tr>
+              <tr>
+                <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#2ea043,#6e40c9)">PZ</div><div><div class="emp-name">Palesa Zulu</div><div class="emp-dept">Operations</div></div></div></td>
+                <td><span class="shift-badge shift-normal">Normal</span></td>
+                <td class="mono">08:00</td>
+                <td class="mono">—</td>
+                <td class="mono">—</td>
+                <td><span class="pill leave">On Leave</span></td>
+              </tr>
+              <tr>
+                <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#bd561d,#6e40c9)">BK</div><div><div class="emp-name">Bongani Khumalo</div><div class="emp-dept">Warehouse</div></div></div></td>
+                <td><span class="shift-badge shift-wh-am">WH AM</span></td>
+                <td class="mono">05:58</td>
+                <td class="mono">14:22</td>
+                <td class="mono">8.4h</td>
+                <td><span class="pill overtime">Overtime</span></td>
+              </tr>
+              <tr>
+                <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#1f6feb,#2ea043)">AC</div><div><div class="emp-name">Ayanda Cele</div><div class="emp-dept">IT</div></div></div></td>
+                <td><span class="shift-badge shift-normal">Normal</span></td>
+                <td class="mono">07:43</td>
+                <td class="mono">12:10</td>
+                <td class="mono">4.4h</td>
+                <td><span class="pill partial">Partial</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ALERTS + MINI CHARTS -->
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🔔 Active Alerts</div>
+            <span class="tag">8 new</span>
+          </div>
+          <div>
+            <div class="alert-item">
+              <div class="alert-dot red"></div>
+              <div>
+                <div class="alert-msg"><strong>Kagiso Dlamini</strong> marked absent — WH PM shift not started</div>
+                <div class="alert-time">14:01 · Auto-flagged</div>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-dot yellow"></div>
+              <div>
+                <div class="alert-msg"><strong>Sipho Radebe</strong> arrived 47 min late (>max 30 min)</div>
+                <div class="alert-time">08:47 · Threshold breach</div>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-dot blue"></div>
+              <div>
+                <div class="alert-msg"><strong>Bongani Khumalo</strong> overtime started — awaiting approval</div>
+                <div class="alert-time">14:05 · OT trigger</div>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-dot yellow"></div>
+              <div>
+                <div class="alert-msg"><strong>5 leave requests</strong> pending manager approval</div>
+                <div class="alert-time">Today · HR Queue</div>
+              </div>
+            </div>
+            <div class="alert-item">
+              <div class="alert-dot red"></div>
+              <div>
+                <div class="alert-msg"><strong>Device #3 (Gate B)</strong> no data received since 11:00</div>
+                <div class="alert-time">11:00 · HikCentral feed</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Week Attendance Rate</div>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:6px;">
+              <span style="font-size:24px;font-weight:700;color:var(--green-text)">94.2%</span>
+              <span style="font-size:11px;color:var(--text3)">Mon–Sat</span>
+            </div>
+            <div class="mini-bars">
+              <div class="mini-bar" style="height:90%;background:var(--green-text)"></div>
+              <div class="mini-bar" style="height:95%;background:var(--green-text)"></div>
+              <div class="mini-bar" style="height:88%;background:var(--yellow-text)"></div>
+              <div class="mini-bar" style="height:97%;background:var(--green-text)"></div>
+              <div class="mini-bar" style="height:93%;background:var(--green-text)"></div>
+              <div class="mini-bar" style="height:94%;background:var(--accent2)"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px;">
+              <span style="font-size:10px;color:var(--text3)">Mon</span>
+              <span style="font-size:10px;color:var(--text3)">Tue</span>
+              <span style="font-size:10px;color:var(--text3)">Wed</span>
+              <span style="font-size:10px;color:var(--text3)">Thu</span>
+              <span style="font-size:10px;color:var(--text3)">Fri</span>
+              <span style="font-size:10px;color:var(--accent2)">Sat</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHIFT BREAKDOWN -->
+    <div class="three-col">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Normal Shift · Office</div><span class="tag">08:00–17:00</span></div>
+        <div class="card-body">
+          <div style="margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text2)">Present</span><span style="color:var(--green-text);font-weight:600">87 / 95</span></div>
+            <div class="progress-wrap"><div class="progress-fill" style="width:91.5%;background:var(--green-text)"></div></div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text2)">Late</span><span style="color:var(--yellow-text);font-weight:600">4</span></div>
+            <div class="progress-wrap"><div class="progress-fill" style="width:4%;background:var(--yellow-text)"></div></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+            <span class="tag">Absent: 4</span>
+            <span class="tag">On Leave: 6</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Warehouse AM Shift</div><span class="tag">06:00–14:00</span></div>
+        <div class="card-body">
+          <div style="margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text2)">Present</span><span style="color:var(--green-text);font-weight:600">31 / 35</span></div>
+            <div class="progress-wrap"><div class="progress-fill" style="width:88%;background:var(--green-text)"></div></div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text2)">OT Active</span><span style="color:var(--accent2);font-weight:600">7</span></div>
+            <div class="progress-wrap"><div class="progress-fill" style="width:20%;background:var(--accent2)"></div></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+            <span class="tag">Absent: 2</span>
+            <span class="tag">Late: 1</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Warehouse PM Shift</div><span class="tag">14:00–22:00</span></div>
+        <div class="card-body">
+          <div style="margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text2)">Present</span><span style="color:var(--green-text);font-weight:600">24 / 27</span></div>
+            <div class="progress-wrap"><div class="progress-fill" style="width:88%;background:var(--green-text)"></div></div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text2)">Absent</span><span style="color:var(--red-text);font-weight:600">3 ⚠</span></div>
+            <div class="progress-wrap"><div class="progress-fill" style="width:11%;background:var(--red-text)"></div></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+            <span class="tag">On Leave: 2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ ATTENDANCE LOG PAGE ═══════════ -->
+  <div class="page" id="page-attendance">
+    <div class="filter-row">
+      <input class="search-box" placeholder="🔍  Search employee..." type="text">
+      <button class="filter-chip active">All</button>
+      <button class="filter-chip">Present</button>
+      <button class="filter-chip">Absent</button>
+      <button class="filter-chip">Late</button>
+      <button class="filter-chip">On Leave</button>
+      <button class="filter-chip">Overtime</button>
+      <div style="margin-left:auto;display:flex;gap:8px;">
+        <select class="form-select" style="font-size:12px;padding:6px 10px;">
+          <option>All Departments</option>
+          <option>Warehouse</option>
+          <option>Office</option>
+          <option>Finance</option>
+          <option>HR</option>
+        </select>
+        <button class="btn btn-ghost">📤 Export to Sage</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Full Attendance Log — 07 Mar 2026</div>
+        <span class="tag">168 employees</span>
+      </div>
+      <table class="att-table" style="width:100%">
+        <thead>
+          <tr>
+            <th>Employee</th>
+            <th>Employee Code</th>
+            <th>Department</th>
+            <th>Shift</th>
+            <th>Time In</th>
+            <th>Time Out</th>
+            <th>Total Hours</th>
+            <th>Undertime</th>
+            <th>OT Hours</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#1f6feb,#6e40c9)">TM</div><div><div class="emp-name">Thabo Molefe</div></div></div></td>
+            <td class="mono" style="color:var(--text2)">EMP-0142</td>
+            <td style="font-size:12px;color:var(--text2)">Warehouse</td>
+            <td><span class="shift-badge shift-wh-am">WH AM</span></td>
+            <td class="mono">06:02</td>
+            <td class="mono">14:10</td>
+            <td class="mono" style="color:var(--green-text)">8h 08m</td>
+            <td class="mono" style="color:var(--text3)">—</td>
+            <td class="mono" style="color:var(--text3)">0.1h</td>
+            <td><span class="pill present">Present</span></td>
+            <td><button class="btn btn-ghost" style="padding:3px 8px;font-size:11px;">View</button></td>
+          </tr>
+          <tr>
+            <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#2ea043,#1f6feb)">SR</div><div><div class="emp-name">Sipho Radebe</div></div></div></td>
+            <td class="mono" style="color:var(--text2)">EMP-0055</td>
+            <td style="font-size:12px;color:var(--text2)">Office</td>
+            <td><span class="shift-badge shift-normal">Normal</span></td>
+            <td class="mono" style="color:var(--yellow-text)">08:47</td>
+            <td class="mono">—</td>
+            <td class="mono">—</td>
+            <td class="mono" style="color:var(--yellow-text)">47m</td>
+            <td class="mono" style="color:var(--text3)">—</td>
+            <td><span class="pill late">Late</span></td>
+            <td><button class="btn btn-ghost" style="padding:3px 8px;font-size:11px;">View</button></td>
+          </tr>
+          <tr>
+            <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#da3633,#bd561d)">KD</div><div><div class="emp-name">Kagiso Dlamini</div></div></div></td>
+            <td class="mono" style="color:var(--text2)">EMP-0089</td>
+            <td style="font-size:12px;color:var(--text2)">Warehouse</td>
+            <td><span class="shift-badge shift-wh-pm">WH PM</span></td>
+            <td class="mono" style="color:var(--text3)">—</td>
+            <td class="mono" style="color:var(--text3)">—</td>
+            <td class="mono" style="color:var(--red-text)">0h</td>
+            <td class="mono" style="color:var(--red-text)">8h</td>
+            <td class="mono" style="color:var(--text3)">—</td>
+            <td><span class="pill absent">Absent</span></td>
+            <td><button class="btn btn-ghost" style="padding:3px 8px;font-size:11px;">View</button></td>
+          </tr>
+          <tr>
+            <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#bd561d,#9e6a03)">LN</div><div><div class="emp-name">Lerato Nkosi</div></div></div></td>
+            <td class="mono" style="color:var(--text2)">EMP-0031</td>
+            <td style="font-size:12px;color:var(--text2)">Finance</td>
+            <td><span class="shift-badge shift-normal">Normal</span></td>
+            <td class="mono">07:55</td>
+            <td class="mono">—</td>
+            <td class="mono">—</td>
+            <td class="mono" style="color:var(--text3)">—</td>
+            <td class="mono" style="color:var(--text3)">—</td>
+            <td><span class="pill present">Present</span></td>
+            <td><button class="btn btn-ghost" style="padding:3px 8px;font-size:11px;">View</button></td>
+          </tr>
+          <tr>
+            <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#bd561d,#6e40c9)">BK</div><div><div class="emp-name">Bongani Khumalo</div></div></div></td>
+            <td class="mono" style="color:var(--text2)">EMP-0103</td>
+            <td style="font-size:12px;color:var(--text2)">Warehouse</td>
+            <td><span class="shift-badge shift-wh-am">WH AM</span></td>
+            <td class="mono">05:58</td>
+            <td class="mono">14:22</td>
+            <td class="mono" style="color:var(--accent2)">8h 24m</td>
+            <td class="mono" style="color:var(--text3)">—</td>
+            <td class="mono" style="color:var(--accent2)">0.4h</td>
+            <td><span class="pill overtime">Overtime</span></td>
+            <td><button class="btn btn-ghost" style="padding:3px 8px;font-size:11px;">View</button></td>
+          </tr>
+          <tr>
+            <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#6e40c9,#1f6feb)">PZ</div><div><div class="emp-name">Palesa Zulu</div></div></div></td>
+            <td class="mono" style="color:var(--text2)">EMP-0077</td>
+            <td style="font-size:12px;color:var(--text2)">Operations</td>
+            <td><span class="shift-badge shift-normal">Normal</span></td>
+            <td class="mono" style="color:var(--text3)">—</td>
+            <td class="mono" style="color:var(--text3)">—</td>
+            <td class="mono">—</td>
+            <td class="mono" style="color:var(--text3)">—</td>
+            <td class="mono" style="color:var(--text3)">—</td>
+            <td><span class="pill leave">On Leave</span></td>
+            <td><button class="btn btn-ghost" style="padding:3px 8px;font-size:11px;">View</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════ EMERGENCY PAGE ═══════════ -->
+  <div class="page" id="page-emergency">
+    <div class="emergency-header">
+      <div>
+        <div class="emergency-badge">🚨 EMERGENCY HEADCOUNT MODE</div>
+        <div style="margin-top:10px;font-size:13px;color:var(--text2)">Real-time occupancy from HikCentral access events. Last synced: <span style="font-family:'DM Mono',monospace;color:var(--text)">14:32:07</span></div>
+      </div>
+      <div style="display:flex;gap:16px;text-align:center;">
+        <div>
+          <div class="big-number" style="color:var(--green-text)">142</div>
+          <div class="big-label">On Premises</div>
+        </div>
+        <div style="width:1px;background:var(--border)"></div>
+        <div>
+          <div class="big-number" style="color:var(--red-text)">26</div>
+          <div class="big-label">Unaccounted</div>
+        </div>
+        <div style="width:1px;background:var(--border)"></div>
+        <div>
+          <div class="big-number" style="color:var(--yellow-text)">168</div>
+          <div class="big-label">Total Employees</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Confirmed On-Site</div>
+          <span class="pill present">142 employees</span>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:8px;">
+            <span>Office Building</span><span style="font-weight:600;color:var(--text)">95</span>
+          </div>
+          <div class="progress-wrap" style="margin-bottom:12px;"><div class="progress-fill" style="width:67%;background:var(--green-text)"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:8px;">
+            <span>Warehouse AM Zone</span><span style="font-weight:600;color:var(--text)">31</span>
+          </div>
+          <div class="progress-wrap" style="margin-bottom:12px;"><div class="progress-fill" style="width:22%;background:var(--accent2)"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:8px;">
+            <span>Warehouse PM Zone</span><span style="font-weight:600;color:var(--text)">16</span>
+          </div>
+          <div class="progress-wrap" style="margin-bottom:12px;"><div class="progress-fill" style="width:11%;background:var(--orange-text)"></div></div>
+          <div style="margin-top:16px;">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Grid view (each dot = 1 employee on-site)</div>
+            <div class="occ-meter">
+              <!-- 142 present dots -->
+              <script>
+                for(let i=0;i<168;i++){
+                  document.write('<div class="occ-dot'+(i<142?'':(i<142+3?' alert':' empty'))+'"></div>');
+                }
+              </script>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⚠ Unaccounted Employees</div>
+          <span class="pill absent">26 missing</span>
+        </div>
+        <div class="scroll-y">
+          <table class="att-table">
+            <thead><tr><th>Employee</th><th>Last Seen</th><th>Location</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><div class="emp-cell"><div class="emp-avatar" style="background:#3d1717;color:var(--red-text)">KD</div><div><div class="emp-name">Kagiso Dlamini</div><div class="emp-dept">Warehouse</div></div></div></td>
+                <td class="mono" style="font-size:11px;color:var(--text3)">Yesterday 22:14</td>
+                <td style="font-size:11px;color:var(--text2)">Gate B</td>
+              </tr>
+              <tr>
+                <td><div class="emp-cell"><div class="emp-avatar" style="background:#3d1717;color:var(--red-text)">JM</div><div><div class="emp-name">James Moloto</div><div class="emp-dept">Office</div></div></div></td>
+                <td class="mono" style="font-size:11px;color:var(--text3)">Today 08:00</td>
+                <td style="font-size:11px;color:var(--text2)">Main Entrance</td>
+              </tr>
+              <tr>
+                <td><div class="emp-cell"><div class="emp-avatar" style="background:#3d1717;color:var(--red-text)">TK</div><div><div class="emp-name">Thandeka Khoza</div><div class="emp-dept">Finance</div></div></div></td>
+                <td class="mono" style="font-size:11px;color:var(--text3)">Today 09:15</td>
+                <td style="font-size:11px;color:var(--text2)">Office Level 2</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;">
+          <button class="btn btn-red" style="flex:1;">📋 Export Headcount PDF</button>
+          <button class="btn btn-ghost">📞 Notify Security</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ LEAVE REQUESTS ═══════════ -->
+  <div class="page" id="page-leave">
+    <div class="tab-bar">
+      <div class="tab active">Pending (5)</div>
+      <div class="tab">Approved</div>
+      <div class="tab">Rejected</div>
+      <div class="tab">All</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Leave Requests — Pending Approval</div>
+        <button class="btn btn-primary">+ New Request</button>
+      </div>
+      <table class="att-table">
+        <thead>
+          <tr>
+            <th>Employee</th>
+            <th>Leave Type</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Days</th>
+            <th>Paid Status</th>
+            <th>Submitted</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#6e40c9,#1f6feb)">PZ</div><div><div class="emp-name">Palesa Zulu</div><div class="emp-dept">Operations</div></div></div></td>
+            <td style="font-size:12px;">Annual Leave</td>
+            <td class="mono">10 Mar 2026</td>
+            <td class="mono">13 Mar 2026</td>
+            <td style="font-weight:600;">4</td>
+            <td><span class="pill present" style="font-size:10px;">Paid</span></td>
+            <td class="mono" style="font-size:11px;color:var(--text3)">04 Mar</td>
+            <td><span class="pill pending">Pending</span></td>
+            <td>
+              <div style="display:flex;gap:6px;">
+                <button class="btn btn-green" style="padding:4px 10px;font-size:11px;">✓ Approve</button>
+                <button class="btn btn-red" style="padding:4px 10px;font-size:11px;">✗ Reject</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#2ea043,#1f6feb)">SR</div><div><div class="emp-name">Sipho Radebe</div><div class="emp-dept">Office</div></div></div></td>
+            <td style="font-size:12px;">Sick Leave</td>
+            <td class="mono">09 Mar 2026</td>
+            <td class="mono">09 Mar 2026</td>
+            <td style="font-weight:600;">1</td>
+            <td><span class="pill present" style="font-size:10px;">Paid</span></td>
+            <td class="mono" style="font-size:11px;color:var(--text3)">07 Mar</td>
+            <td><span class="pill pending">Pending</span></td>
+            <td>
+              <div style="display:flex;gap:6px;">
+                <button class="btn btn-green" style="padding:4px 10px;font-size:11px;">✓ Approve</button>
+                <button class="btn btn-red" style="padding:4px 10px;font-size:11px;">✗ Reject</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#bd561d,#9e6a03)">LN</div><div><div class="emp-name">Lerato Nkosi</div><div class="emp-dept">Finance</div></div></div></td>
+            <td style="font-size:12px;">Family Responsibility</td>
+            <td class="mono">11 Mar 2026</td>
+            <td class="mono">12 Mar 2026</td>
+            <td style="font-weight:600;">2</td>
+            <td><span class="pill present" style="font-size:10px;">Paid</span></td>
+            <td class="mono" style="font-size:11px;color:var(--text3)">06 Mar</td>
+            <td><span class="pill pending">Pending</span></td>
+            <td>
+              <div style="display:flex;gap:6px;">
+                <button class="btn btn-green" style="padding:4px 10px;font-size:11px;">✓ Approve</button>
+                <button class="btn btn-red" style="padding:4px 10px;font-size:11px;">✗ Reject</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════ FLEXIBILITY REQUEST ═══════════ -->
+  <div class="page" id="page-flexibility">
+    <div class="two-col">
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-header"><div class="card-title">New Flexibility Request</div></div>
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label">Employee</label>
+                <input class="form-input" type="text" placeholder="Search employee...">
+              </div>
+              <div class="form-field">
+                <label class="form-label">Request Type</label>
+                <select class="form-select">
+                  <option>Shift Swap</option>
+                  <option>Remote Work</option>
+                  <option>Flexi Hours</option>
+                  <option>Compressed Week</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label">Requested Start Time</label>
+                <input class="form-input" type="time" value="09:00">
+              </div>
+              <div class="form-field">
+                <label class="form-label">Requested End Time</label>
+                <input class="form-input" type="time" value="18:00">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label">Effective From</label>
+                <input class="form-input" type="date">
+              </div>
+              <div class="form-field">
+                <label class="form-label">Effective To</label>
+                <input class="form-input" type="date">
+              </div>
+            </div>
+            <div class="form-field" style="margin-bottom:12px;">
+              <label class="form-label">Working Pattern</label>
+              <input class="form-input" type="text" placeholder="e.g. Mon–Fri, 09:00–18:00">
+            </div>
+            <div class="form-field" style="margin-bottom:16px;">
+              <label class="form-label">Business Impact / Notes</label>
+              <textarea class="form-input" rows="3" placeholder="Describe impact on team coverage..."></textarea>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-primary">Submit Request</button>
+              <button class="btn btn-ghost">Save Draft</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Pending Flex Requests</div><span class="tag">3 open</span></div>
+        <div>
+          <div class="alert-item">
+            <div class="alert-dot blue"></div>
+            <div style="flex:1;">
+              <div class="alert-msg"><strong>Ayanda Cele</strong> — Flexi Hours</div>
+              <div style="font-size:11px;color:var(--text3);margin:2px 0;">09:00–18:00 · 10–28 Mar</div>
+              <div style="display:flex;gap:6px;margin-top:6px;">
+                <button class="btn btn-green" style="padding:3px 8px;font-size:11px;">Approve</button>
+                <button class="btn btn-red" style="padding:3px 8px;font-size:11px;">Reject</button>
+              </div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-dot blue"></div>
+            <div style="flex:1;">
+              <div class="alert-msg"><strong>Nomsa Mthembu</strong> — Remote Work</div>
+              <div style="font-size:11px;color:var(--text3);margin:2px 0;">Mon–Wed WFH · 9–23 Mar</div>
+              <div style="display:flex;gap:6px;margin-top:6px;">
+                <button class="btn btn-green" style="padding:3px 8px;font-size:11px;">Approve</button>
+                <button class="btn btn-red" style="padding:3px 8px;font-size:11px;">Reject</button>
+              </div>
+            </div>
+          </div>
+          <div class="alert-item">
+            <div class="alert-dot yellow"></div>
+            <div style="flex:1;">
+              <div class="alert-msg"><strong>Thabo Molefe</strong> — Shift Swap</div>
+              <div style="font-size:11px;color:var(--text3);margin:2px 0;">WH AM → WH PM · 11 Mar</div>
+              <div style="display:flex;gap:6px;margin-top:6px;">
+                <button class="btn btn-green" style="padding:3px 8px;font-size:11px;">Approve</button>
+                <button class="btn btn-red" style="padding:3px 8px;font-size:11px;">Reject</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ OVERTIME PAGE ═══════════ -->
+  <div class="page" id="page-overtime">
+    <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+      <div class="stat-card blue">
+        <div class="stat-label">OT Hours Today</div>
+        <div class="stat-value">18.3</div>
+        <div class="stat-meta">7 employees</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">OT This Month</div>
+        <div class="stat-value">142h</div>
+        <div class="stat-meta">↑ 12% vs last month</div>
+      </div>
+      <div class="stat-card yellow">
+        <div class="stat-label">Pending Approval</div>
+        <div class="stat-value">4</div>
+        <div class="stat-meta">Requires manager sign-off</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">BCEA Compliance</div>
+        <div class="stat-value">96%</div>
+        <div class="stat-meta">2 breaches flagged</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Overtime Log — Today</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost">BCEA Rules</button>
+          <button class="btn btn-primary">+ Log OT</button>
+        </div>
+      </div>
+      <table class="att-table">
+        <thead>
+          <tr>
+            <th>Employee</th>
+            <th>Shift</th>
+            <th>Shift End</th>
+            <th>OT Start</th>
+            <th>OT End</th>
+            <th>OT Hours</th>
+            <th>OT Type</th>
+            <th>Rate</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#bd561d,#6e40c9)">BK</div><div><div class="emp-name">Bongani Khumalo</div></div></div></td>
+            <td><span class="shift-badge shift-wh-am">WH AM</span></td>
+            <td class="mono">14:00</td>
+            <td class="mono">14:00</td>
+            <td class="mono">14:22</td>
+            <td class="mono" style="color:var(--accent2);font-weight:600">0.4h</td>
+            <td style="font-size:12px;">Weekday OT</td>
+            <td class="mono" style="color:var(--yellow-text)">1.5x</td>
+            <td><span class="pill pending">Pending</span></td>
+          </tr>
+          <tr>
+            <td><div class="emp-cell"><div class="emp-avatar" style="background:linear-gradient(135deg,#1f6feb,#6e40c9)">TM</div><div><div class="emp-name">Thabo Molefe</div></div></div></td>
+            <td><span class="shift-badge shift-wh-am">WH AM</span></td>
+            <td class="mono">14:00</td>
+            <td class="mono">14:00</td>
+            <td class="mono">16:30</td>
+            <td class="mono" style="color:var(--accent2);font-weight:600">2.5h</td>
+            <td style="font-size:12px;">Weekday OT</td>
+            <td class="mono" style="color:var(--yellow-text)">1.5x</td>
+            <td><span class="pill approved">Approved</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+
+    const titles = {
+      dashboard: ['Dashboard', "Today's workforce overview"],
+      attendance: ['Attendance Log', 'Full daily attendance register'],
+      emergency: ['Emergency View', 'Real-time headcount & occupancy'],
+      leave: ['Leave Requests', 'Pending approval queue'],
+      flexibility: ['Flexibility Requests', 'Shift & hours adjustments'],
+      overtime: ['Overtime Management', 'OT tracking & BCEA compliance'],
+    };
+    const [title, sub] = titles[name] || ['', ''];
+    document.getElementById('page-title').textContent = title;
+    document.getElementById('page-sub').textContent = sub;
+
+    event.currentTarget && event.currentTarget.classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.onclick && n.onclick.toString().includes("'" + name + "'")) {
+        n.classList.add('active');
+      }
+    });
+  }
+
+  // Filter chips
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+      this.closest('.filter-row').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // Tabs
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      this.closest('.tab-bar').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
